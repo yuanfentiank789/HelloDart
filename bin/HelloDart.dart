@@ -4,14 +4,15 @@ import 'dart:io';
 
 void main(List<String> arguments) {
 //  testOperator();
-//enableFlags(hidden: false, bold: true);
+  testOptionalPositionParams();
+//  testOptionalNameParams();
 //testTryCatch();
 // testFuture();
 // testLinkFuture();
 // testDelayedFuture();
 // testValueFuture();
 // testErrorFuture1();
-testErrorFuture2();
+//testErrorFuture2();
 // testAsync();
 // testWaitFutures();
 }
@@ -137,8 +138,33 @@ testThrow() {
   throw 'a string'; //可以throw任何非null对象，但更推荐Error和Exception或他们的子类
 }
 
-void enableFlags({required bool bold, required bool hidden}) {
-  print('bold is $bold, hidden is $hidden');
+
+/**
+ * 命名参数是按名称引用的，因此可以按与其声明不同的顺序使用它们
+ */
+void testOptionalNameParams(){
+  getHttpUrl('example.com', '/index.html', port: 8080); // port == 8080
+  getHttpUrl('example.com', '/index.html', numRetries: 5); // numRetries=5
+  getHttpUrl('example.com', '/index.html', numRetries: 5, port:8080); // numRetries=5,port=8080
+  getHttpUrl('example.com', '/index.html');             // port == 80
+}
+
+/**
+ * 可选位置参数，如果要指定 numRetries ，则不能省略 port
+ */
+void testOptionalPositionParams(){
+  getHttpUrl2('example.com', '/index.html');
+  getHttpUrl2('example.com', '/index.html', 8080);
+  getHttpUrl2('example.com', '/index.html', 8080, 5);
+
+}
+
+getHttpUrl(String server, String path, {int port: 80, int numRetries: 3}) {
+  // ...
+}
+
+getHttpUrl2(String server, String path, [int port=80, int numRetries=3]) {
+  // ...
 }
 
 void testOperator() {
