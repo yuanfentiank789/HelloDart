@@ -1,11 +1,127 @@
+import  'dart:async';
+
+import 'dart:io';
 
 void main(List<String> arguments) {
 //  testOperator();
 //enableFlags(hidden: false, bold: true);
 //testTryCatch();
-
+// testFuture();
+// testLinkFuture();
+// testDelayedFuture();
+// testValueFuture();
+// testErrorFuture1();
+testErrorFuture2();
+// testAsync();
+// testWaitFutures();
 }
 
+void testWaitFutures(){
+  print('main start');
+
+  var task1 = Future((){
+    print('task 1');
+    return 1;
+  });
+
+  var task2 = Future((){
+    print('task 2');
+    return 2;
+  });
+
+  var task3 = Future((){
+    print('task 3');
+    return 3;
+  });
+
+  Future fut = Future.wait([task1, task2, task3]);
+  fut.then((responses){
+    print(responses);
+  });
+
+  print('main stop');
+}
+
+void testValueFuture(){
+  Future.value(18).then((value) {
+    print('hh:$value');
+  });
+}
+
+void testErrorFuture1(){
+  Future.error('error happened')
+      .then((value) {
+    print('onValue: $value');
+  }, onError: (error) {
+    print('onError $error');
+  });
+}
+
+void testErrorFuture2(){
+  Future.error('error happened')
+      .then((value) {
+    print('onValue: $value');
+  }).catchError((e){
+    print(e);
+  });
+}
+
+void testDelayedFuture(){
+  print('main start');
+
+  Future.delayed(Duration(seconds:1),(){
+    print('task delayed');
+  });
+
+  Future((){
+    // 模拟耗时5秒
+    sleep(Duration(seconds:5));
+    print('5s task');
+  });
+
+  print('main stop');
+}
+
+void testFuture() {
+  Future(() {
+    return 'future value';
+  }).then((value) {
+    print('onValue: $value');
+  }, onError: (error) {
+    print('onError $error');
+  });
+}
+
+testLinkFuture(){
+  // 链式调用，可以跟多个then，注册多个回调
+  Future((){
+    print('async task');
+    return 1;
+  }).then((res){
+    print('first async task complete $res');
+    return 2;
+  }).then((res){
+    print('second async task complete $res');
+  });
+
+  print('main stop');
+}
+
+testAsync(){
+  print('before future');
+  var fut = testAwait();
+  print(fut.runtimeType);
+  print('after future');
+}
+
+testAwait() async{
+  var result =  await getname();
+  print('result is $result');
+}
+
+String getname() {
+  return'zs';
+}
 
 testTryCatch() {
   try {
