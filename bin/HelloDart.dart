@@ -3,18 +3,34 @@ import  'dart:async';
 import 'dart:io';
 
 void main(List<String> arguments) {
-//  testOperator();
-  testOptionalPositionParams();
+ // testOperator();
+ //  testOptionalPositionParams();
 //  testOptionalNameParams();
-//testTryCatch();
+// testTryCatch();
 // testFuture();
 // testLinkFuture();
 // testDelayedFuture();
 // testValueFuture();
 // testErrorFuture1();
-//testErrorFuture2();
-// testAsync();
+// testErrorFuture2();
+testAsync();
 // testWaitFutures();
+//   testSync();
+}
+
+void testSync(){
+
+  Future((){
+    print('this is my task');
+  });
+  Future.sync(() => print('sync task'));
+  print('main start');
+
+  Future.microtask((){
+    print('this is microtask');
+  });
+
+  print('main stop');
 }
 
 void testWaitFutures(){
@@ -127,8 +143,8 @@ String getname() {
 testTryCatch() {
   try {
     testThrow();
-  } on String catch (e) {
-    print('exception with on: $e');
+  } on String catch (e, stack) {
+    print('exception with on: $e,stack=$stack');
   } catch (e) {
     print('exception: $e');
   }
@@ -148,7 +164,9 @@ void testOptionalNameParams(){
   getHttpUrl('example.com', '/index.html', numRetries: 5, port:8080); // numRetries=5,port=8080
   getHttpUrl('example.com', '/index.html');             // port == 80
 }
-
+getHttpUrl(String server, String path, {int port: 80, int numRetries: 3}) {
+  // ...
+}
 /**
  * 可选位置参数，如果要指定 numRetries ，则不能省略 port
  */
@@ -157,10 +175,6 @@ void testOptionalPositionParams(){
   getHttpUrl2('example.com', '/index.html', 8080);
   getHttpUrl2('example.com', '/index.html', 8080, 5);
 
-}
-
-getHttpUrl(String server, String path, {int port: 80, int numRetries: 3}) {
-  // ...
 }
 
 getHttpUrl2(String server, String path, [int port=80, int numRetries=3]) {
@@ -172,6 +186,7 @@ void testOperator() {
   final w = Vector(2, 2);
 
   assert(v + w == Vector(4, 5));
+  print((v+w).toString());
   assert(v - w == Vector(0, 1));
 }
 
@@ -197,5 +212,13 @@ class Vector {
       x.hashCode ^
       y.hashCode;
 
+  @override
+  String toString() {
+    return 'x:$x,y:$y';
+  }
 
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+
+  }
 }
